@@ -1,0 +1,112 @@
+cv:
+  name: Alex Rivera
+  headline: SOFTWARE ENGINEER
+  location: Seattle, WA
+  email: alex.rivera@example.com
+  phone: +1 206 555 0100
+  website: https://alexrivera.dev
+  social_networks:
+  - network: LinkedIn
+    username: alexrivera
+  - network: GitHub
+    username: alexrivera
+  sections:
+    Work Experience:
+    - position: Senior Software Engineer
+      company: TechScale Inc.
+      start_date: 2022-03
+      end_date: present
+      location: Seattle, WA
+      highlights:
+      - Architected distributed microservices handling 1.5M+ daily requests, reducing
+        p99 latency by 38%
+      - Engineered real-time data streaming pipeline using Next.js, WebSockets, and
+        Redis for 40,000 concurrent users
+      - Mentored team of 6 junior engineers and instituted automated CI/CD reducing
+        release cycle from 3 days to 45 minutes
+    - position: Software Engineer
+      company: CloudCore Systems
+      start_date: 2020-07
+      end_date: 2022-02
+      location: San Francisco, CA
+      highlights:
+      - Built responsive client portals in React and TypeScript increasing user onboarding
+        completion by 24%
+      - Optimized PostgreSQL queries and Redis caching, cutting average database response
+        time from 240ms to 42ms
+    Education:
+    - institution: University of Washington
+      degree: 'B.S. (Mit) | CGPA: 9.5'
+      start_date: 2016-09
+      end_date: 2020-06
+      location: Seattle, WA
+      highlights:
+      - Dean's List (all semesters)
+      - 'Capstone: Neural network optimization for edge hardware'
+      area: Computer Science
+    - institution: Engineering Institute / University
+      degree: 'B.Tech / B.E. (VTU / Anna Univ / Mumbai Univ) | CGPA: 8.5'
+      start_date: 2020-08
+      end_date: 2024-05
+      location: Bengaluru, India
+      area: Computer Science & Engineering
+    Projects & Achievements:
+    - name: '**PulseEngine - Realtime Analytics** | Go, Next.js, ClickHouse, Docker'
+      summary: Open-source high-throughput telemetry collector
+      link: https://github.com/alexrivera/pulse-engine
+      highlights:
+      - Achieved 1,200+ GitHub stars and adoption by 30+ production companies
+      - Processes 50,000 events/sec on a single /mo server instance
+    Technical Skills & Proficiencies:
+    - '**Languages & Frameworks:** TypeScript, React, Next.js, Node.js, Python, Go,
+      SQL'
+    - '**Cloud & Infrastructure:** AWS, Docker, Kubernetes, PostgreSQL, Redis, Supabase,
+      Git'
+    Certifications & Accreditations:
+    - '**AWS Certified Solutions Architect** - Amazon Web Services (2023)'
+    Declaration:
+    - I hereby declare that all information given above is true, complete, and correct
+      to the best of my knowledge and belief.
+    - '**Date:** 2026-09-18 | **Place:** Seattle, WA          **Candidate Signature:**
+      Alex Rivera'
+design:
+  theme: engineeringresumes
+  page:
+    show_top_note: false
+    show_footer: false
+    top_margin: 0.42in
+    bottom_margin: 0.42in
+    left_margin: 0.5in
+    right_margin: 0.5in
+  header:
+    alignment: center
+    space_below_name: 0.2cm
+    space_below_headline: 0.25cm
+    connections:
+      separator: '|'
+      space_between_connections: 0.35cm
+  section_titles:
+    type: with_full_line
+    line_thickness: 0.5pt
+    space_above: 0.3cm
+    space_below: 0.15cm
+  sections:
+    space_between_regular_entries: 0.22cm
+    space_between_text_based_entries: 0.1cm
+  typography:
+    font_family:
+      body: Source Sans 3
+      name: Source Sans 3
+      headline: Source Sans 3
+      connections: Source Sans 3
+      section_titles: Source Sans 3
+    font_size:
+      body: 9.8pt
+      name: 22pt
+      headline: 10.5pt
+      connections: 9pt
+      section_titles: 11pt
+    bold:
+      name: true
+      headline: true
+      section_titles: true
