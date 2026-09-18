@@ -242,7 +242,18 @@ def json_to_rendercv_dict(data: Dict[str, Any], theme: str) -> Dict[str, Any]:
             f"**Date:** {date_str} | **Place:** {place_str}          **Candidate Signature:** {sig_str}"
         ]
 
-    rendercv_theme = theme if theme in ("harvard", "sb2nov") else "engineeringresumes"
+    valid_themes = (
+        "classic",
+        "ember",
+        "engineeringclassic",
+        "engineeringresumes",
+        "harvard",
+        "ink",
+        "moderncv",
+        "opal",
+        "sb2nov",
+    )
+    rendercv_theme = theme if theme in valid_themes else "engineeringresumes"
 
     design_dict: Dict[str, Any] = {
         "theme": rendercv_theme,
@@ -253,14 +264,23 @@ def json_to_rendercv_dict(data: Dict[str, Any], theme: str) -> Dict[str, Any]:
             "bottom_margin": "0.42in",
             "left_margin": "0.5in",
             "right_margin": "0.5in"
-        },
-        "typography": {
+        }
+    }
+
+    if rendercv_theme == "engineeringresumes":
+        design_dict["section_titles"] = {
+            "type": "with_full_line",
+            "line_thickness": "0.5pt",
+            "space_above": "0.3cm",
+            "space_below": "0.15cm"
+        }
+        design_dict["typography"] = {
             "font_family": {
-                "body": "Source Sans 3" if rendercv_theme != "harvard" else "EB Garamond",
-                "name": "Source Sans 3" if rendercv_theme != "harvard" else "EB Garamond",
-                "headline": "Source Sans 3" if rendercv_theme != "harvard" else "EB Garamond",
-                "connections": "Source Sans 3" if rendercv_theme != "harvard" else "EB Garamond",
-                "section_titles": "Source Sans 3" if rendercv_theme != "harvard" else "EB Garamond",
+                "body": "Source Sans 3",
+                "name": "Source Sans 3",
+                "headline": "Source Sans 3",
+                "connections": "Source Sans 3",
+                "section_titles": "Source Sans 3",
             },
             "font_size": {
                 "body": "9.8pt",
@@ -274,8 +294,8 @@ def json_to_rendercv_dict(data: Dict[str, Any], theme: str) -> Dict[str, Any]:
                 "headline": True,
                 "section_titles": True
             }
-        },
-        "header": {
+        }
+        design_dict["header"] = {
             "alignment": "center",
             "space_below_name": "0.2cm",
             "space_below_headline": "0.25cm",
@@ -283,18 +303,7 @@ def json_to_rendercv_dict(data: Dict[str, Any], theme: str) -> Dict[str, Any]:
                 "separator": "|",
                 "space_between_connections": "0.35cm"
             }
-        },
-        "section_titles": {
-            "type": "with_full_line",
-            "line_thickness": "0.5pt",
-            "space_above": "0.3cm",
-            "space_below": "0.15cm"
-        },
-        "sections": {
-            "space_between_regular_entries": "0.22cm",
-            "space_between_text_based_entries": "0.1cm"
         }
-    }
 
     custom_design = data.get("design") or {}
     if custom_design.get("margins"):

@@ -38,28 +38,164 @@ export function LivePreview({ resume, canvasOnly = false }: LivePreviewProps) {
   const isHarvard = theme === 'harvard';
   const isSb2nov = theme === 'sb2nov';
   const isModern = theme === 'moderncv';
-  const isClassic = theme === 'classic' || theme === 'engineeringclassic';
+  const isEmber = theme === 'ember';
+  const isInk = theme === 'ink';
+  const isOpal = theme === 'opal';
+  const isEngClassic = theme === 'engineeringclassic';
+  const isClassic = theme === 'classic';
 
   const isFresher = Boolean(
     resume.fresher_mode ?? (theme === 'harvard' || theme === 'sb2nov' || TEMPLATE_CATALOG[theme]?.fresher)
   );
 
+  // Template-specific design tokens
+  const themeConfig = (() => {
+    switch (theme) {
+      case 'moderncv':
+        return {
+          fontFamily: 'var(--font-outfit), sans-serif',
+          primaryColor: '#004F90',
+          headerAlign: 'left' as const,
+          headerBorder: 'border-b-2 border-[#004F90]/25 pb-4 mb-5',
+          nameClass: 'text-3xl font-extrabold text-[#004F90] tracking-tight',
+          roleClass: 'inline-block text-xs font-semibold text-[#004F90] bg-blue-50 border border-blue-200/80 px-2.5 py-0.5 rounded mt-1.5 uppercase tracking-wider',
+          sectionTitle: 'font-bold uppercase tracking-wider text-xs text-[#004F90]',
+          sectionBorder: 'border-b-2 border-[#004F90] pb-1 mb-3 flex items-center justify-between',
+          dateColor: 'text-[#004F90] font-medium',
+          badgeClass: 'font-semibold text-[#004F90] bg-blue-50 border border-blue-200 px-1.5 py-0.5 rounded text-[11px]',
+          topBar: 'h-1.5 w-full bg-[#004F90] -mt-10 sm:-mt-14 mb-6 rounded-t',
+        };
+      case 'ember':
+        return {
+          fontFamily: 'var(--font-outfit), sans-serif',
+          primaryColor: '#9B2319',
+          headerAlign: 'left' as const,
+          headerBorder: 'border-b border-[#9B2319]/25 pb-4 mb-5',
+          nameClass: 'text-3xl font-extrabold text-[#9B2319] tracking-tight',
+          roleClass: 'text-xs font-semibold text-[#5A3C37] mt-1.5 uppercase tracking-widest italic',
+          sectionTitle: 'font-bold uppercase tracking-widest text-xs text-[#9B2319]',
+          sectionBorder: 'border-b-2 border-[#9B2319] pb-1 mb-3 flex items-center justify-between',
+          dateColor: 'text-[#9B2319] font-medium',
+          badgeClass: 'font-semibold text-[#9B2319] bg-orange-50 border border-orange-200 px-1.5 py-0.5 rounded text-[11px]',
+          topBar: 'h-2 w-full bg-gradient-to-r from-[#9B2319] via-[#C2410C] to-[#EA580C] -mt-10 sm:-mt-14 mb-6 rounded-t',
+        };
+      case 'ink':
+        return {
+          fontFamily: 'Georgia, "Times New Roman", serif',
+          primaryColor: '#2A1852',
+          headerAlign: 'center' as const,
+          headerBorder: 'border-y-2 border-[#2A1852] py-4 mb-6',
+          nameClass: 'text-3xl font-serif font-black text-[#2A1852] tracking-tight uppercase',
+          roleClass: 'text-xs font-serif font-semibold text-[#46326E] mt-1 uppercase tracking-widest',
+          sectionTitle: 'font-serif font-bold uppercase tracking-widest text-xs text-[#2A1852]',
+          sectionBorder: 'border-b-2 border-[#2A1852] pb-1 mb-3 flex items-center justify-between',
+          dateColor: 'font-serif text-[#46326E] italic',
+          badgeClass: 'font-serif font-semibold text-[#2A1852] bg-purple-50 border border-purple-200 px-1.5 py-0.5 rounded text-[11px]',
+          topBar: null,
+        };
+      case 'opal':
+        return {
+          fontFamily: 'var(--font-outfit), sans-serif',
+          primaryColor: '#00645A',
+          headerAlign: 'left' as const,
+          headerBorder: 'border-b border-[#00645A]/30 pb-4 mb-5',
+          nameClass: 'text-3xl font-extrabold text-[#00645A] tracking-tight',
+          roleClass: 'inline-block text-xs font-semibold text-[#00645A] bg-teal-50 border border-teal-200 px-2.5 py-0.5 rounded-full mt-1.5 tracking-wider uppercase',
+          sectionTitle: 'font-bold uppercase tracking-wider text-xs text-[#00645A]',
+          sectionBorder: 'border-b-2 border-[#00645A] pb-1 mb-3 flex items-center justify-between',
+          dateColor: 'text-[#00645A] font-semibold',
+          badgeClass: 'font-semibold text-[#00645A] bg-teal-50 border border-teal-200 px-1.5 py-0.5 rounded-full text-[11px]',
+          topBar: 'h-1.5 w-full bg-[#00645A] -mt-10 sm:-mt-14 mb-6 rounded-t',
+        };
+      case 'engineeringclassic':
+        return {
+          fontFamily: 'var(--font-outfit), monospace, sans-serif',
+          primaryColor: '#004F90',
+          headerAlign: 'left' as const,
+          headerBorder: 'border-b border-gray-400 pb-2 mb-4',
+          nameClass: 'text-2xl font-black text-gray-950 tracking-tighter uppercase',
+          roleClass: 'text-xs font-mono font-medium text-gray-700 mt-0.5 uppercase tracking-wider',
+          sectionTitle: 'font-mono font-bold uppercase tracking-tight text-xs text-gray-950',
+          sectionBorder: 'border-b border-gray-800 pb-0.5 mb-2.5 flex items-center justify-between',
+          dateColor: 'font-mono text-[11px] text-gray-600',
+          badgeClass: 'font-mono text-[11px] font-bold text-gray-900 bg-gray-100 border border-gray-300 px-1 py-0.5 rounded',
+          topBar: null,
+        };
+      case 'classic':
+        return {
+          fontFamily: 'Georgia, serif',
+          primaryColor: '#1E3A8A',
+          headerAlign: 'center' as const,
+          headerBorder: 'border-b border-[#1E3A8A]/30 pb-4 mb-5',
+          nameClass: 'text-3xl font-serif font-bold text-[#1E3A8A] tracking-tight',
+          roleClass: 'text-xs font-serif font-medium text-gray-700 mt-1 uppercase tracking-widest',
+          sectionTitle: 'font-serif font-bold uppercase tracking-wider text-xs text-[#1E3A8A]',
+          sectionBorder: 'border-b-2 border-[#1E3A8A] pb-1 mb-3 flex items-center justify-between',
+          dateColor: 'font-serif text-xs text-gray-600',
+          badgeClass: 'font-serif text-[11px] font-semibold text-[#1E3A8A] bg-blue-50 border border-blue-200 px-1.5 py-0.5 rounded',
+          topBar: null,
+        };
+      case 'harvard':
+        return {
+          fontFamily: 'Georgia, serif',
+          primaryColor: '#111827',
+          headerAlign: 'center' as const,
+          headerBorder: 'border-b border-gray-800 pb-4 mb-5',
+          nameClass: 'text-3xl uppercase font-serif tracking-widest text-gray-950',
+          roleClass: 'text-xs font-serif font-medium text-gray-600 mt-1 uppercase tracking-wider',
+          sectionTitle: 'font-serif font-bold uppercase tracking-wider text-xs text-gray-900 text-center',
+          sectionBorder: 'border-b border-gray-800 pb-1 mb-3 flex items-center justify-center',
+          dateColor: 'font-serif text-xs text-gray-600',
+          badgeClass: 'font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded text-[11px]',
+          topBar: null,
+        };
+      case 'sb2nov':
+        return {
+          fontFamily: 'Arial, sans-serif',
+          primaryColor: '#111827',
+          headerAlign: 'left' as const,
+          headerBorder: 'border-b-2 border-gray-900 pb-3 mb-5',
+          nameClass: 'text-3xl font-black text-gray-950 tracking-tight',
+          roleClass: 'text-xs font-medium text-gray-600 mt-0.5 uppercase tracking-wider',
+          sectionTitle: 'font-bold uppercase tracking-wider text-xs text-gray-950',
+          sectionBorder: 'border-b-2 border-gray-900 pb-1 mb-3 flex items-center justify-between',
+          dateColor: 'text-xs text-gray-600',
+          badgeClass: 'font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded text-[11px]',
+          topBar: null,
+        };
+      default: // engineeringresumes
+        return {
+          fontFamily: 'var(--font-outfit), sans-serif',
+          primaryColor: '#030712',
+          headerAlign: 'center' as const,
+          headerBorder: 'border-b border-gray-200 pb-4 mb-5',
+          nameClass: 'text-3xl font-bold text-gray-950 tracking-tight',
+          roleClass: 'text-xs font-medium text-gray-600 mt-1 uppercase tracking-wider',
+          sectionTitle: 'font-bold uppercase tracking-wider text-xs text-gray-950',
+          sectionBorder: 'border-b border-gray-300 pb-1 mb-3 flex items-center justify-between',
+          dateColor: 'text-xs text-gray-500 font-normal',
+          badgeClass: 'font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded text-[11px]',
+          topBar: null,
+        };
+    }
+  })();
+
   const renderExperience = () => {
     if (!resume.experience || resume.experience.length === 0) return null;
     return (
       <section className="mb-5">
-        <h2 className={`font-bold uppercase tracking-wider text-xs border-b pb-1 mb-3 ${isHarvard ? 'font-serif border-gray-800 text-gray-900 text-center' : 'border-gray-300 text-gray-950 flex items-center justify-between'}`}>
-          <span>{isFresher ? 'Internships & Experience' : 'Work Experience'}</span>
+        <h2 className={themeConfig.sectionBorder}>
+          <span className={themeConfig.sectionTitle}>{isFresher ? 'Internships & Experience' : 'Work Experience'}</span>
         </h2>
         <div className="space-y-4">
           {resume.experience.map((exp) => (
             <div key={exp.id} className="text-xs">
               <div className="flex justify-between items-baseline font-bold text-gray-900">
-                <span className="text-sm font-semibold">{exp.position}</span>
-                <span className="text-gray-500 font-normal">{exp.start_date} – {exp.end_date || 'Present'}</span>
+                <span className={`text-sm font-semibold ${isModern || isOpal || isEmber ? 'text-gray-950 font-bold' : ''}`}>{exp.position}</span>
+                <span className={themeConfig.dateColor}>{exp.start_date} – {exp.end_date || 'Present'}</span>
               </div>
               <div className="flex justify-between items-baseline text-gray-700 italic mb-1.5">
-                <span>{exp.company}</span>
+                <span className={isClassic || isInk ? 'font-serif not-italic font-medium text-gray-800' : ''}>{exp.company}</span>
                 {exp.location && <span className="not-italic text-gray-500">{exp.location}</span>}
               </div>
               {exp.highlights && exp.highlights.length > 0 && (
@@ -80,15 +216,15 @@ export function LivePreview({ resume, canvasOnly = false }: LivePreviewProps) {
     if (!resume.education || resume.education.length === 0) return null;
     return (
       <section className="mb-5">
-        <h2 className={`font-bold uppercase tracking-wider text-xs border-b pb-1 mb-3 ${isHarvard ? 'font-serif border-gray-800 text-gray-900 text-center' : 'border-gray-300 text-gray-950'}`}>
-          Education
+        <h2 className={themeConfig.sectionBorder}>
+          <span className={themeConfig.sectionTitle}>Education</span>
         </h2>
         <div className="space-y-3">
           {resume.education.map((edu) => (
             <div key={edu.id} className="text-xs">
               <div className="flex justify-between items-baseline font-bold text-gray-900">
                 <span className="text-sm font-semibold">{edu.institution}</span>
-                <span className="text-gray-500 font-normal">{edu.start_date} – {edu.end_date}</span>
+                <span className={themeConfig.dateColor}>{edu.start_date} – {edu.end_date}</span>
               </div>
               <div className="flex justify-between items-baseline text-gray-700 mt-0.5">
                 <span>
@@ -97,7 +233,7 @@ export function LivePreview({ resume, canvasOnly = false }: LivePreviewProps) {
                 </span>
                 <div className="flex items-center gap-2">
                   {edu.cgpa_or_percentage && (
-                    <span className="font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded text-[11px]">
+                    <span className={themeConfig.badgeClass}>
                       {edu.cgpa_or_percentage}
                     </span>
                   )}
@@ -122,8 +258,8 @@ export function LivePreview({ resume, canvasOnly = false }: LivePreviewProps) {
     if (!resume.projects || resume.projects.length === 0) return null;
     return (
       <section className="mb-5">
-        <h2 className={`font-bold uppercase tracking-wider text-xs border-b pb-1 mb-3 ${isHarvard ? 'font-serif border-gray-800 text-gray-900 text-center' : 'border-gray-300 text-gray-950'}`}>
-          {isFresher ? 'Academic & Technical Projects' : 'Projects & Achievements'}
+        <h2 className={themeConfig.sectionBorder}>
+          <span className={themeConfig.sectionTitle}>{isFresher ? 'Academic & Technical Projects' : 'Projects & Achievements'}</span>
         </h2>
         <div className="space-y-3">
           {resume.projects.map((proj) => (
@@ -132,7 +268,13 @@ export function LivePreview({ resume, canvasOnly = false }: LivePreviewProps) {
                 <div className="flex items-center gap-1.5">
                   <span className="text-sm">{proj.name}</span>
                   {proj.tools && proj.tools.length > 0 && (
-                    <span className="font-normal text-gray-500 text-[11px]">| {proj.tools.join(', ')}</span>
+                    isEngClassic ? (
+                      <span className="font-mono text-[10px] bg-gray-100 text-gray-800 px-1 py-0.5 rounded border border-gray-300">
+                        {proj.tools.join(', ')}
+                      </span>
+                    ) : (
+                      <span className="font-normal text-gray-500 text-[11px]">| {proj.tools.join(', ')}</span>
+                    )
                   )}
                 </div>
                 {proj.link && (
@@ -170,8 +312,8 @@ export function LivePreview({ resume, canvasOnly = false }: LivePreviewProps) {
     if (!resume.skills || resume.skills.length === 0) return null;
     return (
       <section className="mb-4">
-        <h2 className={`font-bold uppercase tracking-wider text-xs border-b pb-1 mb-2.5 ${isHarvard ? 'font-serif border-gray-800 text-gray-900 text-center' : 'border-gray-300 text-gray-950'}`}>
-          Technical Skills & Proficiencies
+        <h2 className={themeConfig.sectionBorder}>
+          <span className={themeConfig.sectionTitle}>Technical Skills & Proficiencies</span>
         </h2>
         <div className="space-y-1 text-xs">
           {resume.skills.map((skill) => (
@@ -189,8 +331,8 @@ export function LivePreview({ resume, canvasOnly = false }: LivePreviewProps) {
     if (!resume.certifications || resume.certifications.length === 0) return null;
     return (
       <section className="mb-4">
-        <h2 className={`font-bold uppercase tracking-wider text-xs border-b pb-1 mb-2 ${isHarvard ? 'font-serif border-gray-800 text-gray-900 text-center' : 'border-gray-300 text-gray-950'}`}>
-          Certifications & Accreditations
+        <h2 className={themeConfig.sectionBorder}>
+          <span className={themeConfig.sectionTitle}>Certifications & Accreditations</span>
         </h2>
         <div className="space-y-1 text-xs">
           {resume.certifications.map((c) => (
@@ -207,25 +349,30 @@ export function LivePreview({ resume, canvasOnly = false }: LivePreviewProps) {
   const canvas = (
     <div 
       id="resume-canvas"
-      className={`${canvasOnly ? 'w-[794px] shadow-none' : 'w-full max-w-[794px] shadow-2xl'} min-h-[1050px] bg-white text-gray-900 p-10 sm:p-14 text-sm font-sans transition-all selection:bg-indigo-100`}
+      className={`${canvasOnly ? 'w-[794px] shadow-none' : 'w-full max-w-[794px] shadow-2xl'} min-h-[1050px] bg-white text-gray-900 p-10 sm:p-14 text-sm transition-all selection:bg-indigo-100`}
       style={{
-        fontFamily: isHarvard ? 'Georgia, serif' : isSb2nov ? 'Arial, sans-serif' : 'var(--font-outfit), sans-serif',
-        lineHeight: '1.45'
+        fontFamily: themeConfig.fontFamily,
+        lineHeight: isEngClassic ? '1.35' : '1.45'
       }}
     >
+        {/* TOP ACCENT BAR FOR MODERN / EMBER / OPAL */}
+        {themeConfig.topBar && (
+          <div className={themeConfig.topBar} />
+        )}
+
         {/* HEADER */}
-        <header className={`mb-6 ${isHarvard ? 'text-center' : isSb2nov ? 'text-left border-b-2 border-gray-900 pb-4' : 'text-center border-b border-gray-200 pb-5'}`}>
-          <h1 className={`font-bold tracking-tight ${isHarvard ? 'text-3xl uppercase font-serif tracking-widest' : 'text-2xl sm:text-3xl text-gray-950'}`}>
+        <header className={`${themeConfig.headerBorder} ${themeConfig.headerAlign === 'center' ? 'text-center' : 'text-left'}`}>
+          <h1 className={themeConfig.nameClass}>
             {resume.contact.name || 'Your Full Name'}
           </h1>
           {resume.target_role && (
-            <div className="text-sm font-medium text-gray-600 mt-1 uppercase tracking-wider">
+            <div className={themeConfig.roleClass}>
               {resume.target_role}
             </div>
           )}
 
           {/* CONTACT INFO BAR */}
-          <div className={`flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-gray-600 mt-2.5 ${isHarvard ? 'justify-center font-serif' : isSb2nov ? 'justify-start' : 'justify-center'}`}>
+          <div className={`flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-gray-600 mt-2.5 ${themeConfig.headerAlign === 'center' ? 'justify-center' : 'justify-start'}`}>
             {resume.contact.location && (
               <span className="flex items-center gap-1">
                 <MapPin className="w-3 h-3 text-gray-400" />
@@ -286,8 +433,8 @@ export function LivePreview({ resume, canvasOnly = false }: LivePreviewProps) {
         {/* SUMMARY */}
         {resume.summary && (
           <section className="mb-4">
-            <h2 className={`font-bold uppercase tracking-wider text-xs border-b pb-1 mb-2 ${isHarvard ? 'font-serif border-gray-800 text-gray-900 text-center' : 'border-gray-300 text-gray-950'}`}>
-              {isFresher ? 'Career Objective' : 'Professional Summary'}
+            <h2 className={themeConfig.sectionBorder}>
+              <span className={themeConfig.sectionTitle}>{isFresher ? 'Career Objective' : 'Professional Summary'}</span>
             </h2>
             <p className="text-xs text-gray-700 leading-relaxed">{resume.summary}</p>
           </section>
