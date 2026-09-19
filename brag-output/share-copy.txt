@@ -1,0 +1,1 @@
+﻿Your resume wasn't getting rejected by recruiters. It was getting vaporized by a regex from 2004. We raised a fake Series A to fix it with ResumeCraft.

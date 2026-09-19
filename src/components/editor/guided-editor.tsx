@@ -443,6 +443,14 @@ export function GuidedEditor({ initialResume, onSave }: GuidedEditorProps) {
               mobileView === 'preview' ? 'hidden lg:flex' : 'flex'
             }`}
           >
+            {/* Live ATS Score Gauge Banner */}
+            <div className="p-2.5 border-b border-[#E1E5EA] bg-[#F8FAFC]">
+              <ScoreGauge
+                scoreResult={calculateResumeScore(resume)}
+                onFocusSection={(sec) => setActiveTab(sec as any)}
+              />
+            </div>
+
             {/* SECTION TAB SELECTOR (Clean, Horizontal with Active Indicator) */}
             <div className="flex border-b border-[#E1E5EA] overflow-x-auto px-3 py-1.5 gap-1 shrink-0 bg-[#FAFBFC] no-scrollbar">
               {tabs.map((tab) => {
