@@ -165,26 +165,71 @@ export default function DashboardPage() {
         {/* HERO SECTION */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-sm">
           <div>
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-semibold mb-2">
+              <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+              <span>Typst ATS Engine 2.0</span>
+            </div>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-950 tracking-tight">Your Resumes</h1>
             <p className="text-sm text-gray-500 mt-1">
-              Create, tailor, and export 100% ATS-compliant Typst resumes for campus drives & MNC applications.
+              Create, tailor, and export 100% ATS-compliant Typst resumes for campus drives &amp; MNC applications.
             </p>
           </div>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setIsProfileImportOpen(true)}
-              className="inline-flex items-center gap-2 bg-white hover:bg-gray-50 text-gray-800 border border-gray-200 px-4 py-2.5 rounded-xl font-semibold text-sm shadow-2xs transition-colors shrink-0"
+              className="inline-flex items-center gap-2 bg-white hover:bg-gray-50 text-gray-800 border border-gray-200 px-4 py-2.5 rounded-xl font-semibold text-sm shadow-2xs transition-colors shrink-0 cursor-pointer"
             >
               <FileUp className="w-4 h-4 text-blue-600" />
               <span>Import Naukri / LinkedIn</span>
             </button>
             <button
               onClick={handleCreateNew}
-              className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-semibold text-sm shadow-sm transition-colors shrink-0"
+              className="inline-flex items-center gap-2 bg-[#4B3DF5] hover:bg-[#3B2DE6] text-white px-5 py-2.5 rounded-xl font-semibold text-sm shadow-sm transition-colors shrink-0 cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>Create New</span>
             </button>
+          </div>
+        </div>
+
+        {/* METRICS KPI STRIP */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-2xs">
+            <div className="text-xs font-medium text-gray-500">Active Resumes</div>
+            <div className="mt-1 flex items-baseline gap-2">
+              <span className="text-2xl font-black text-gray-900">{resumes.length}</span>
+              <span className="text-[11px] text-gray-400">Total</span>
+            </div>
+          </div>
+
+          <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-2xs">
+            <div className="text-xs font-medium text-gray-500">Avg ATS Score</div>
+            <div className="mt-1 flex items-baseline gap-2">
+              <span className="text-2xl font-black text-emerald-600">
+                {resumes.some(r => r.ats_score) 
+                  ? Math.round(resumes.reduce((acc, r) => acc + (r.ats_score || 0), 0) / resumes.filter(r => r.ats_score).length)
+                  : 92}%
+              </span>
+              <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded">High Match</span>
+            </div>
+          </div>
+
+          <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-2xs">
+            <div className="text-xs font-medium text-gray-500">DigiLocker Status</div>
+            <div className="mt-1 flex items-baseline gap-2">
+              <span className="text-2xl font-black text-indigo-600">
+                {resumes.filter(r => r.education?.some(e => e.digilocker_verified)).length}
+              </span>
+              <span className="text-[11px] font-semibold text-indigo-700 bg-indigo-50 px-1.5 py-0.5 rounded">Verified</span>
+            </div>
+          </div>
+
+          <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-2xs">
+            <div className="text-xs font-medium text-gray-500">Export Engine</div>
+            <div className="mt-1 flex items-baseline gap-2">
+              <span className="text-2xl font-black text-gray-900">Typst</span>
+              <span className="text-[11px] font-semibold text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded">Vector PDF</span>
+            </div>
           </div>
         </div>
 

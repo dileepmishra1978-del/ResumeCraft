@@ -138,41 +138,48 @@ export function Header() {
               Templates
             </Link>
 
+            <Link
+              href="/placement"
+              className="px-2.5 py-1 text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200/80 rounded-full hover:bg-emerald-100 transition-colors flex items-center gap-1.5"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+              <span>Placement Cell (TPO)</span>
+            </Link>
 
             <a
               href="#features"
               className="px-2 py-1 hover:text-[#090B10] transition-colors"
             >
-              Resources
+              Features
             </a>
           </nav>
         </div>
 
-        {/* RIGHT: ACTIONS (Login & Get Started) */}
+        {/* RIGHT: ACTIONS */}
         <div className="hidden md:flex items-center gap-3">
           <Link
-            href="/login"
+            href="/dashboard"
             className="text-xs sm:text-sm font-semibold text-[#263D59] hover:text-[#090B10] px-3 py-2 transition-colors"
           >
-            Login
+            My Resumes
           </Link>
 
           <Link
-            href="/login"
-            className="bg-[#4B3DF5] hover:bg-[#3B2DE6] text-white text-xs sm:text-sm font-semibold px-4 sm:px-5 py-2 rounded-lg shadow-xs transition-all flex items-center gap-1.5"
+            href="/dashboard/resumes/res-1"
+            className="bg-[#4B3DF5] hover:bg-[#3B2DE6] text-white text-xs sm:text-sm font-bold px-4 sm:px-5 py-2 rounded-xl shadow-xs hover:shadow transition-all flex items-center gap-1.5 group"
           >
-            <span>Get Started</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            <span>Start Free Editor</span>
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
           </Link>
         </div>
 
         {/* MOBILE MENU TOGGLE (< 768px) */}
         <div className="flex items-center gap-2 md:hidden">
           <Link
-            href="/login"
+            href="/dashboard/resumes/res-1"
             className="bg-[#4B3DF5] text-white text-xs font-semibold px-3 py-1.5 rounded-lg shadow-xs"
           >
-            Get Started
+            Start Free
           </Link>
 
           <button

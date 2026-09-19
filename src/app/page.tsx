@@ -6,7 +6,15 @@ import {
   ArrowRight, 
   CheckCircle2, 
   ShieldCheck, 
-  Zap 
+  Zap,
+  Building2,
+  Award,
+  Sparkles,
+  FileSpreadsheet,
+  FileUp,
+  GraduationCap,
+  ArrowUpRight,
+  Check
 } from 'lucide-react';
 
 import { Header } from '@/components/layout/header';
@@ -18,31 +26,175 @@ export default function HomePage() {
       <Header />
 
       {/* HERO SECTION */}
-      <section className="pt-16 sm:pt-24 pb-16 px-6 sm:px-12 max-w-6xl mx-auto text-center space-y-8">
-        <h1 className="text-4xl sm:text-6xl font-black text-gray-950 tracking-tight leading-[1.1] max-w-4xl mx-auto">
-          The AI resume builder designed to <span className="text-indigo-600 underline decoration-blue-600 decoration-[3.5px] underline-offset-4">beat the ATS</span> and land the interview.
+      <section className="pt-14 sm:pt-20 pb-16 px-6 sm:px-12 max-w-6xl mx-auto text-center space-y-8 relative">
+        {/* Subtle mesh background accent */}
+        <div className="absolute inset-x-0 -top-10 -z-10 transform-gpu overflow-hidden blur-3xl" aria-hidden="true">
+          <div className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#4b3df5] opacity-15 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"></div>
+        </div>
+
+        {/* Floating Announcement Pill */}
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-indigo-50 via-purple-50 to-indigo-50 border border-indigo-200/80 text-indigo-700 text-xs font-semibold shadow-2xs hover:border-indigo-300 transition-all group">
+          <span className="flex h-2 w-2 relative">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-600"></span>
+          </span>
+          <span>New: DigiLocker Verified Marksheets &amp; Placement Cell (TPO) Portal Live</span>
+          <Link href="/placement" className="font-bold underline underline-offset-2 ml-1 flex items-center gap-0.5 hover:text-indigo-900">
+            Explore <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+          </Link>
+        </div>
+
+        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-gray-950 tracking-tight leading-[1.08] max-w-5xl mx-auto">
+          The AI resume builder engineered to <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600">beat the ATS</span> and land the offer.
         </h1>
 
-        <p className="text-base sm:text-xl text-gray-600 max-w-2xl mx-auto font-normal leading-relaxed">
-          Say goodbye to flimsy templates that get rejected by corporate applicant tracking systems. 
-          ResumeCraft compiles true vector Typst typography while AI rewrites your bullet points with ResumeCraft XYZ formula.
+        <p className="text-base sm:text-xl text-gray-600 max-w-3xl mx-auto font-normal leading-relaxed">
+          Ditch flimsy visual templates that get silently filtered by corporate ATS parsers. 
+          ResumeCraft compiles mathematically crisp vector Typst typography while AI refines your impact metrics with the Google XYZ formula — backed by native DigiLocker academic verification.
         </p>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-2">
           <Link
-            href="/login"
-            className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm px-8 py-3.5 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 group"
+            href="/dashboard/resumes/res-1"
+            className="w-full sm:w-auto bg-[#4B3DF5] hover:bg-[#3B2DE6] text-white font-semibold text-sm sm:text-base px-8 py-3.5 rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 group"
           >
-            <span>Create Your Free ATS Resume</span>
+            <span>Start Building Free</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+          </Link>
+          <Link
+            href="/placement"
+            className="w-full sm:w-auto bg-white hover:bg-gray-50 text-gray-800 font-semibold text-sm sm:text-base px-6 py-3.5 rounded-xl border border-gray-200 shadow-xs hover:border-gray-300 transition-all flex items-center justify-center gap-2"
+          >
+            <Building2 className="w-4 h-4 text-[#002D62]" />
+            <span>Placement Cell (TPO) Demo</span>
           </Link>
         </div>
 
         {/* TRUST BADGES */}
-        <div className="pt-8 border-t border-gray-100 flex flex-wrap items-center justify-center gap-6 sm:gap-12 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+        <div className="pt-8 border-t border-gray-100 flex flex-wrap items-center justify-center gap-6 sm:gap-12 text-xs font-semibold text-gray-500 uppercase tracking-wider">
           <span className="flex items-center gap-1.5"><ShieldCheck className="w-4 h-4 text-emerald-600" /> 100% ATS-Compliant Typst</span>
-          <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-emerald-600" /> Scanned 1M+ Resumes</span>
-          <span className="flex items-center gap-1.5"><Zap className="w-4 h-4 text-emerald-600" /> No AI Hallucinations</span>
+          <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-emerald-600" /> DigiLocker &amp; NAD Verified</span>
+          <span className="flex items-center gap-1.5"><Zap className="w-4 h-4 text-emerald-600" /> Naukri &amp; MNC Keyword Ready</span>
+          <span className="flex items-center gap-1.5"><Sparkles className="w-4 h-4 text-emerald-600" /> 1-Page Auto Precision Fit</span>
+        </div>
+      </section>
+
+      {/* INDIA DIFFERENTIATORS SHOWCASE SECTION */}
+      <section className="py-16 px-6 sm:px-12 bg-gradient-to-b from-gray-50/70 via-white to-gray-50/40 border-y border-gray-200/70">
+        <div className="max-w-6xl mx-auto space-y-12">
+          <div className="text-center space-y-3 max-w-3xl mx-auto">
+            <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 bg-indigo-50 border border-indigo-100 px-3 py-1 rounded-full">
+              Engineered For India &amp; Global MNCs
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-black text-gray-950 tracking-tight">
+              Purpose-built features other resume tools overlook
+            </h2>
+            <p className="text-base text-gray-600 leading-relaxed">
+              From college placement drives to government portal applications, ResumeCraft gives Indian engineers and students an unfair advantage.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Card 1: DigiLocker */}
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-xs hover:shadow-md hover:border-emerald-300 transition-all flex flex-col justify-between group">
+              <div className="space-y-4">
+                <div className="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+                  <ShieldCheck className="w-6 h-6" />
+                </div>
+                <div className="space-y-1.5">
+                  <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                    Official Integration
+                  </span>
+                  <h3 className="font-bold text-gray-900 text-lg group-hover:text-emerald-700 transition-colors">
+                    DigiLocker Verified Marksheets
+                  </h3>
+                  <p className="text-xs text-gray-600 leading-relaxed">
+                    Connect directly to NAD / DigiLocker. Embed verified badges on your degree &amp; CGPA that HR recruiters instantly trust.
+                  </p>
+                </div>
+              </div>
+              <div className="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between text-xs">
+                <span className="font-semibold text-emerald-700 flex items-center gap-1">
+                  <Check className="w-3.5 h-3.5" /> Tamper-Proof Badges
+                </span>
+              </div>
+            </div>
+
+            {/* Card 2: Govt Form Autofill */}
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-xs hover:shadow-md hover:border-blue-300 transition-all flex flex-col justify-between group">
+              <div className="space-y-4">
+                <div className="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+                  <FileSpreadsheet className="w-6 h-6" />
+                </div>
+                <div className="space-y-1.5">
+                  <span className="text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                    UPSC / SSC / IBPS
+                  </span>
+                  <h3 className="font-bold text-gray-900 text-lg group-hover:text-blue-700 transition-colors">
+                    Govt Application Autofill
+                  </h3>
+                  <p className="text-xs text-gray-600 leading-relaxed">
+                    1-click copy pre-formatted DOB, Father&apos;s Name, Category, and 10th/12th Board roll numbers directly into PSU &amp; Sarkari portals.
+                  </p>
+                </div>
+              </div>
+              <div className="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between text-xs">
+                <span className="font-semibold text-blue-700 flex items-center gap-1">
+                  <Check className="w-3.5 h-3.5" /> Zero Manual Copy-Paste
+                </span>
+              </div>
+            </div>
+
+            {/* Card 3: Naukri & LinkedIn Import */}
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-xs hover:shadow-md hover:border-indigo-300 transition-all flex flex-col justify-between group">
+              <div className="space-y-4">
+                <div className="w-11 h-11 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
+                  <FileUp className="w-6 h-6" />
+                </div>
+                <div className="space-y-1.5">
+                  <span className="text-[10px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                    1-Click Sync
+                  </span>
+                  <h3 className="font-bold text-gray-900 text-lg group-hover:text-indigo-700 transition-colors">
+                    Naukri &amp; LinkedIn Import
+                  </h3>
+                  <p className="text-xs text-gray-600 leading-relaxed">
+                    Paste your profile or existing resume to populate experience, projects, education, and skills in under 3 seconds with automated parsing.
+                  </p>
+                </div>
+              </div>
+              <div className="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between text-xs">
+                <span className="font-semibold text-indigo-700 flex items-center gap-1">
+                  <Check className="w-3.5 h-3.5" /> Instant Review &amp; Edit
+                </span>
+              </div>
+            </div>
+
+            {/* Card 4: Placement Cell (TPO) */}
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-xs hover:shadow-md hover:border-purple-300 transition-all flex flex-col justify-between group">
+              <div className="space-y-4">
+                <div className="w-11 h-11 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold">
+                  <GraduationCap className="w-6 h-6" />
+                </div>
+                <div className="space-y-1.5">
+                  <span className="text-[10px] font-bold text-purple-700 bg-purple-50 border border-purple-200 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                    For Colleges &amp; TPOs
+                  </span>
+                  <h3 className="font-bold text-gray-900 text-lg group-hover:text-purple-700 transition-colors">
+                    Placement Cell Portal
+                  </h3>
+                  <p className="text-xs text-gray-600 leading-relaxed">
+                    Campus placement teams track cohort readiness, audit ATS compliance, and export verified batch rosters for visiting recruiters.
+                  </p>
+                </div>
+              </div>
+              <div className="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between text-xs">
+                <Link href="/placement" className="font-semibold text-purple-700 flex items-center gap-1 hover:underline">
+                  Launch Portal <ArrowUpRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -1242,6 +1394,45 @@ export default function HomePage() {
               Create multiple versions of your resume for different jobs and
               customize each one without rebuilding your resume from scratch.
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* BOTTOM CTA SECTION */}
+      <section className="py-20 px-6 sm:px-12 bg-gradient-to-b from-white to-gray-50 border-t border-gray-200/80">
+        <div className="max-w-5xl mx-auto rounded-3xl bg-gradient-to-tr from-[#090B10] via-[#0F172A] to-[#1E1B4B] p-8 sm:p-14 text-center text-white shadow-xl relative overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(99,102,241,0.25),transparent_50%)] pointer-events-none" />
+          
+          <div className="relative z-10 space-y-6 max-w-2xl mx-auto">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-indigo-300 text-xs font-semibold backdrop-blur-xs border border-white/10">
+              <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+              100% Free · No Credit Card Required
+            </span>
+
+            <h2 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
+              Ready to land your dream placement or tech job?
+            </h2>
+
+            <p className="text-sm sm:text-base text-gray-300 font-normal leading-relaxed">
+              Create an ATS-proof Typst resume with verified DigiLocker credentials and AI XYZ-formula bullets in less than 5 minutes.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-3">
+              <Link
+                href="/dashboard/resumes/res-1"
+                className="w-full sm:w-auto bg-[#4B3DF5] hover:bg-[#3B2DE6] text-white font-semibold text-sm sm:text-base px-8 py-3.5 rounded-xl shadow-lg hover:shadow-indigo-500/25 transition-all flex items-center justify-center gap-2 group cursor-pointer"
+              >
+                <span>Launch Free Editor Now</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+              </Link>
+              <Link
+                href="/placement"
+                className="w-full sm:w-auto bg-white/10 hover:bg-white/15 text-white font-semibold text-sm sm:text-base px-6 py-3.5 rounded-xl border border-white/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <Building2 className="w-4 h-4 text-indigo-300" />
+                <span>Placement Cell Portal</span>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
