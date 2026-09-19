@@ -191,14 +191,19 @@ def json_to_rendercv_dict(data: Dict[str, Any], theme: str) -> Dict[str, Any]:
     # Skills block
     skill_entries = []
     if data.get("skills"):
-        for s in data["skills"]:
-            category = s.get("category", "Skills")
-            items = s.get("items", [])
-            if isinstance(items, list):
-                items_str = ", ".join(items)
-            else:
-                items_str = str(items)
-            skill_entries.append(f"**{category}:** {items_str}")
+        if isinstance(data["skills"], dict):
+            for cat, items in data["skills"].items():
+                items_str = ", ".join(items) if isinstance(items, list) else str(items)
+                skill_entries.append(f"**{cat}:** {items_str}")
+        elif isinstance(data["skills"], list):
+            for s in data["skills"]:
+                if isinstance(s, dict):
+                    category = s.get("category", "Skills")
+                    items = s.get("items", [])
+                    items_str = ", ".join(items) if isinstance(items, list) else str(items)
+                    skill_entries.append(f"**{category}:** {items_str}")
+                elif isinstance(s, str):
+                    skill_entries.append(s)
 
     # Certifications block
     cert_entries = []

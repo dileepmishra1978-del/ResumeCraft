@@ -49,3 +49,6 @@ render-service/rendercv_output/
 render-service/test_export*
 test_export*
 
+
+.vercel
+.env*

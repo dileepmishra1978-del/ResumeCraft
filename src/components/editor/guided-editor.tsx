@@ -9,6 +9,7 @@ import { calculateResumeScore, ResumeScoreResult } from '@/lib/scoring/resumeSco
 import { KeywordTargetingSidebar } from './keyword-targeting-sidebar';
 import { CoverLetterTab } from './cover-letter-tab';
 import { SignaturePad } from './signature-pad';
+import { downloadResumeAsPdf } from '@/lib/pdf/client-pdf';
 import { 
   Sparkles, 
   Download, 
@@ -122,34 +123,53 @@ export function GuidedEditor({ initialResume, onSave }: GuidedEditorProps) {
 
   const handleExportPdf = async () => {
     setDownloading(true);
-    try {
-      const res = await fetch('/api/resumes/export', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          resume_data: resume,
-          theme: resume.template,
-        }),
-      });
+    const safeTitle = (resume.contact.name || resume.title || 'Resume')
+      .replace(/[^a-zA-Z0-9_-]/g, '_');
+    const fileName = `${safeTitle}_Resume.pdf`;
 
-      if (res.ok) {
-        const blob = await res.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${(resume.contact.name || 'Resume').replace(/\s+/g, '_')}_ATS.pdf`;
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-        return;
+    try {
+      // 1. Try backend RenderCV compiler if available
+      try {
+        const res = await fetch('/api/resumes/export', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            resume_data: resume,
+            theme: resume.template,
+          }),
+        });
+
+        if (res.ok) {
+          const blob = await res.blob();
+          if (blob.size > 1500) {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+            return;
+          }
+        }
+      } catch (backendErr) {
+        console.warn("Backend compiler unavailable, using high-fidelity client-side PDF generator:", backendErr);
       }
 
-      // Backend compiler returned non-200 (e.g. running on serverless Vercel without microservice)
-      console.warn("Backend compiler returned non-200. Using high-fidelity browser PDF print.");
-      window.print();
+      // 2. High-fidelity client-side PDF export (zero blank screens, works on Vercel, mobile & desktop)
+      const exportTarget =
+        document.getElementById('resume-export-container') ||
+        document.getElementById('resume-canvas');
+
+      if (!exportTarget) {
+        throw new Error('Resume element not found');
+      }
+
+      await downloadResumeAsPdf(exportTarget, fileName);
     } catch (err: any) {
-      console.warn("Export API error, using browser print fallback:", err);
+      console.error("Client PDF export error:", err);
+      // Fallback to browser print if all else fails
       window.print();
     } finally {
       setDownloading(false);
@@ -1502,6 +1522,24 @@ export function GuidedEditor({ initialResume, onSave }: GuidedEditorProps) {
           }
         }}
       />
+
+      {/* Dedicated Offscreen A4 Canvas for 100% Reliable Client-Side PDF Generation */}
+      <div
+        id="resume-export-container"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          zIndex: -9999,
+          pointerEvents: 'none',
+          width: '794px',
+          background: '#ffffff',
+          overflow: 'visible',
+        }}
+        aria-hidden="true"
+      >
+        <LivePreview resume={resume} canvasOnly={true} />
+      </div>
     </div>
   );
 }
