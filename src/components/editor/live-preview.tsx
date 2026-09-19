@@ -346,13 +346,25 @@ export function LivePreview({ resume, canvasOnly = false }: LivePreviewProps) {
     );
   };
 
+  const design = resume.design;
+  const paddingStyle = design?.margins
+    ? {
+        paddingTop: design.margins.top || '2.5rem',
+        paddingBottom: design.margins.bottom || '2.5rem',
+        paddingLeft: design.margins.left || '2.5rem',
+        paddingRight: design.margins.right || '2.5rem',
+      }
+    : {};
+
   const canvas = (
     <div 
       id="resume-canvas"
-      className={`${canvasOnly ? 'w-[794px] shadow-none' : 'w-full max-w-[794px] shadow-2xl'} min-h-[1050px] bg-white text-gray-900 p-10 sm:p-14 text-sm transition-all selection:bg-indigo-100`}
+      className={`${canvasOnly ? 'w-[794px] shadow-none' : 'w-full max-w-[794px] shadow-2xl'} min-h-[1050px] bg-white text-gray-900 ${design?.margins ? '' : 'p-10 sm:p-14'} text-sm transition-all selection:bg-indigo-100`}
       style={{
         fontFamily: themeConfig.fontFamily,
-        lineHeight: isEngClassic ? '1.35' : '1.45'
+        lineHeight: design?.line_spacing ? design.line_spacing : (isEngClassic ? '1.35' : '1.45'),
+        fontSize: design?.font_size ? design.font_size : undefined,
+        ...paddingStyle,
       }}
     >
         {/* TOP ACCENT BAR FOR MODERN / EMBER / OPAL */}

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { ResumeData } from "@/types/resume";
+import { optimize1PageFit } from "@/lib/pdf/vector-pdf";
 
 export async function POST(req: Request) {
   try {
@@ -12,23 +13,28 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No resume data provided" }, { status: 400 });
     }
 
-    const serviceUrl = process.env.RENDERCV_SERVICE_URL || "http://127.0.0.1:8000";
-    const res = await fetch(`${serviceUrl}/auto-adjust`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        resume_data: resumeData,
-        target_pages: targetPages,
-        theme,
-      }),
-    });
+    try {
+      const serviceUrl = process.env.RENDERCV_SERVICE_URL || "http://127.0.0.1:8000";
+      const res = await fetch(`${serviceUrl}/auto-adjust`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          resume_data: resumeData,
+          target_pages: targetPages,
+          theme,
+        }),
+      });
 
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.detail || "Auto-adjust service failed");
+      if (res.ok) {
+        const result = await res.json();
+        return NextResponse.json(result);
+      }
+    } catch {
+      // Microservice offline / Vercel serverless environment
     }
 
-    const result = await res.json();
+    // High-performance native 1-Page Fit optimizer
+    const result = optimize1PageFit(resumeData, targetPages);
     return NextResponse.json(result);
   } catch (error: any) {
     console.error("Auto adjust error:", error);

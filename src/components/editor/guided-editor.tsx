@@ -9,7 +9,7 @@ import { calculateResumeScore, ResumeScoreResult } from '@/lib/scoring/resumeSco
 import { KeywordTargetingSidebar } from './keyword-targeting-sidebar';
 import { CoverLetterTab } from './cover-letter-tab';
 import { SignaturePad } from './signature-pad';
-import { downloadVectorPdf } from '@/lib/pdf/vector-pdf';
+import { downloadVectorPdf, optimize1PageFit } from '@/lib/pdf/vector-pdf';
 import { 
   Sparkles, 
   Download, 
@@ -71,7 +71,17 @@ export function GuidedEditor({ initialResume, onSave }: GuidedEditorProps) {
   const handleAutoAdjust = async () => {
     setAutoAdjusting(true);
     try {
-      const res = await fetch('/api/resumes/auto-adjust', {
+      // 1. Direct high-speed client calculation
+      const result = optimize1PageFit(resume, 1);
+      if (result.design) {
+        setResume((prev) => ({
+          ...prev,
+          design: result.design,
+        }));
+      }
+
+      // 2. Also notify the server in background if available
+      fetch('/api/resumes/auto-adjust', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -79,23 +89,12 @@ export function GuidedEditor({ initialResume, onSave }: GuidedEditorProps) {
           target_pages: 1,
           theme: resume.template,
         }),
-      });
+      }).catch(() => {});
 
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || 'Auto adjust failed');
-      }
-
-      const data = await res.json();
-      if (data.design) {
-        setResume((prev) => ({
-          ...prev,
-          design: data.design,
-        }));
-      }
-      alert(data.message || 'Auto adjust complete — 1-page fit optimized');
+      alert(result.message || '1-Page Fit optimized successfully!');
     } catch (e: any) {
-      alert(e.message || 'Auto adjust failed');
+      console.error("Auto adjust error:", e);
+      alert('Auto adjust failed: ' + (e.message || e));
     } finally {
       setAutoAdjusting(false);
     }
