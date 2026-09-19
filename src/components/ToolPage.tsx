@@ -217,7 +217,7 @@ function ScoreGaugeDemo() {
           Candidate: Alex Rivera
         </span>
       </div>
-      <ScoreGauge scoreResult={SAMPLE_SCORE_RESULT} />
+      <ScoreGauge scoreResult={SAMPLE_SCORE_RESULT} resume={DEFAULT_RESUME} />
     </div>
   );
 }

@@ -7,6 +7,8 @@ import { ResumeData, RenderCVTheme } from '@/types/resume';
 import { DEFAULT_RESUME, generateId } from '@/lib/utils';
 import { TEMPLATE_NAMES } from '@/components/editor/live-preview';
 import { ResumeCard } from '@/components/ResumeCard';
+import { ReferralPanel } from '@/components/dashboard/referral-panel';
+import { ProfileImportModal } from '@/components/editor/profile-import-modal';
 import { 
   Plus, 
   FileText, 
@@ -17,12 +19,15 @@ import {
   Sliders, 
   CheckCircle2, 
   ArrowRight,
-  ShieldCheck
+  ShieldCheck,
+  FileUp,
+  Building2
 } from 'lucide-react';
 
 export default function DashboardPage() {
   const router = useRouter();
   const [resumes, setResumes] = useState<ResumeData[]>([]);
+  const [isProfileImportOpen, setIsProfileImportOpen] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -83,6 +88,19 @@ export default function DashboardPage() {
     router.push(`/dashboard/resumes/${newId}`);
   };
 
+  const handleImportSuccess = (imported: Partial<ResumeData>) => {
+    const newId = `res-${Date.now()}`;
+    const newResume: ResumeData = {
+      ...DEFAULT_RESUME,
+      ...imported,
+      id: newId,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+    saveList([newResume, ...resumes]);
+    router.push(`/dashboard/resumes/${newId}`);
+  };
+
   const handleDuplicate = (e: React.MouseEvent, resume: ResumeData) => {
     e.preventDefault();
     e.stopPropagation();
@@ -110,40 +128,68 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* NAV */}
       <nav className="h-[58px] bg-white border-b border-[#E1E5EA] px-4 sm:px-8 flex items-center justify-between sticky top-0 z-20">
-        <Link href="/" className="flex items-center">
-          <span className="font-bold text-[#090B10] tracking-tight text-lg">
-            Resume<span className="text-[#4B3DF5]">Craft</span>
-          </span>
-        </Link>
+        <div className="flex items-center gap-4">
+          <Link href="/" className="flex items-center">
+            <span className="font-bold text-[#090B10] tracking-tight text-lg">
+              Resume<span className="text-[#4B3DF5]">Craft</span>
+            </span>
+          </Link>
+          <Link
+            href="/placement"
+            className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-gray-700 hover:text-gray-950 bg-gray-100 hover:bg-gray-200 border border-gray-200 px-2.5 py-1 rounded-lg transition-colors"
+          >
+            <Building2 className="w-3.5 h-3.5 text-[#002D62]" />
+            <span>Placement Cell (TPO)</span>
+          </Link>
+        </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <button
+            onClick={() => setIsProfileImportOpen(true)}
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#263D59] hover:text-[#090B10] bg-white hover:bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-lg transition-colors"
+          >
+            <FileUp className="w-3.5 h-3.5 text-blue-600" />
+            <span className="hidden sm:inline">Import Profile</span>
+          </button>
           <Link
             href="/dashboard/resumes/res-1"
-            className="text-xs font-semibold bg-[#4B3DF5] hover:bg-[#3B2DE6] text-white px-3.5 py-2 rounded-lg transition-colors shadow-xs"
+            className="text-xs font-semibold bg-[#4B3DF5] hover:bg-[#3B2DE6] text-white px-3.5 py-1.5 rounded-lg transition-colors shadow-xs"
           >
-            Open Resume Editor →
+            Open Editor →
           </Link>
         </div>
       </nav>
 
       {/* CONTENT */}
-      <main className="flex-1 max-w-6xl w-full mx-auto p-4 sm:p-8 space-y-8">
+      <main className="flex-1 max-w-6xl w-full mx-auto p-4 sm:p-8 space-y-6">
         {/* HERO SECTION */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-sm">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-950 tracking-tight">Your Resumes</h1>
             <p className="text-sm text-gray-500 mt-1">
-              Create, tailor, and export 100% ATS-compliant Typst resumes for every job application.
+              Create, tailor, and export 100% ATS-compliant Typst resumes for campus drives & MNC applications.
             </p>
           </div>
-          <button
-            onClick={handleCreateNew}
-            className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-semibold text-sm shadow-sm transition-colors shrink-0"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Create New Resume</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setIsProfileImportOpen(true)}
+              className="inline-flex items-center gap-2 bg-white hover:bg-gray-50 text-gray-800 border border-gray-200 px-4 py-2.5 rounded-xl font-semibold text-sm shadow-2xs transition-colors shrink-0"
+            >
+              <FileUp className="w-4 h-4 text-blue-600" />
+              <span>Import Naukri / LinkedIn</span>
+            </button>
+            <button
+              onClick={handleCreateNew}
+              className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-semibold text-sm shadow-sm transition-colors shrink-0"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Create New</span>
+            </button>
+          </div>
         </div>
+
+        {/* REFER A FRIEND & UNLOCK PRO PANEL */}
+        <ReferralPanel />
 
         {/* RESUME GRID */}
         {resumes.length === 0 ? (
@@ -174,6 +220,13 @@ export default function DashboardPage() {
           </div>
         )}
       </main>
+
+      {/* PROFILE IMPORT MODAL */}
+      <ProfileImportModal
+        isOpen={isProfileImportOpen}
+        onClose={() => setIsProfileImportOpen(false)}
+        onImportSuccess={handleImportSuccess}
+      />
     </div>
   );
 }

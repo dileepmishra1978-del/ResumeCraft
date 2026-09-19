@@ -18,6 +18,11 @@ export interface ResumeContact {
   website?: string;
   linkedin?: string;
   github?: string;
+  // Optional & private fields for Government Application Form Autofill (never shown on corporate resumes)
+  dob?: string;
+  category_reservation?: 'General' | 'OBC-NCL' | 'SC' | 'ST' | 'EWS' | 'PwD';
+  father_name?: string;
+  gender?: 'Male' | 'Female' | 'Other';
 }
 
 export interface EducationItem {
@@ -31,6 +36,11 @@ export interface EducationItem {
   cgpa_or_percentage?: string;
   board_or_university?: string;
   highlights?: string[];
+  // DigiLocker Verified credentials
+  digilocker_verified?: boolean;
+  digilocker_doc_type?: string;
+  digilocker_doc_id?: string;
+  digilocker_verified_date?: string;
 }
 
 export interface ExperienceItem {
@@ -252,3 +262,33 @@ export interface UserUsage {
   ai_rewrites_used: number;
   resumes_count: number;
 }
+
+export interface BatchStudent {
+  id: string;
+  name: string;
+  email: string;
+  roll_number: string;
+  department: string;
+  status: 'Draft' | 'Complete';
+  ats_score: number;
+  digilocker_verified: boolean;
+  last_updated: string;
+}
+
+export interface PlacementBatch {
+  id: string;
+  name: string;
+  academic_year: string;
+  department: string;
+  target_companies?: string[];
+  created_at: string;
+  students: BatchStudent[];
+}
+
+export interface ReferralState {
+  referral_code: string;
+  referred_count: number;
+  unlocked: boolean;
+  required_count: number;
+}
+

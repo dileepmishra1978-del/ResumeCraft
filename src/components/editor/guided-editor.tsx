@@ -9,6 +9,11 @@ import { calculateResumeScore, ResumeScoreResult } from '@/lib/scoring/resumeSco
 import { KeywordTargetingSidebar } from './keyword-targeting-sidebar';
 import { CoverLetterTab } from './cover-letter-tab';
 import { SignaturePad } from './signature-pad';
+import { DigiLockerModal } from './digilocker-modal';
+import { GovtFormAutofillModal } from './govt-form-autofill-modal';
+import { ProfileImportModal } from './profile-import-modal';
+import { ScoreBadgeModal } from './score-badge-modal';
+import { TRANSLATIONS, SupportedLang } from '@/lib/i18n/translations';
 import { downloadVectorPdf, optimize1PageFit } from '@/lib/pdf/vector-pdf';
 import { 
   Sparkles, 
@@ -30,7 +35,12 @@ import {
   FileCheck,
   Eye,
   PenTool,
-  CheckCircle2
+  CheckCircle2,
+  ShieldCheck,
+  Building2,
+  Share2,
+  Languages,
+  FileUp
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -49,6 +59,26 @@ export function GuidedEditor({ initialResume, onSave }: GuidedEditorProps) {
   const [downloading, setDownloading] = useState(false);
   const [autoAdjusting, setAutoAdjusting] = useState(false);
   const [isTailorModalOpen, setIsTailorModalOpen] = useState(false);
+  const [isDigiLockerOpen, setIsDigiLockerOpen] = useState(false);
+  const [isGovtFormModalOpen, setIsGovtFormModalOpen] = useState(false);
+  const [isProfileImportOpen, setIsProfileImportOpen] = useState(false);
+  const [isScoreBadgeOpen, setIsScoreBadgeOpen] = useState(false);
+  const [lang, setLang] = useState<SupportedLang>('en');
+
+  useEffect(() => {
+    const savedLang = localStorage.getItem('resumecraft_lang') as SupportedLang;
+    if (savedLang && (savedLang === 'en' || savedLang === 'hi')) {
+      setLang(savedLang);
+    }
+  }, []);
+
+  const handleToggleLang = () => {
+    const next = lang === 'en' ? 'hi' : 'en';
+    setLang(next);
+    localStorage.setItem('resumecraft_lang', next);
+  };
+
+  const t = TRANSLATIONS[lang];
 
   // Phase A: Deterministic scoring state with 300ms debounce
   const [scoreResult, setScoreResult] = useState<ResumeScoreResult>(() => calculateResumeScore(initialResume));
@@ -233,24 +263,24 @@ export function GuidedEditor({ initialResume, onSave }: GuidedEditorProps) {
   // Re-order tabs based on Fresher Mode (Campus standard puts Education & Projects at top)
   const tabs = isFresher
     ? [
-        { id: 'contact', label: 'Contact', icon: User },
-        { id: 'summary', label: 'Summary', icon: FileText },
-        { id: 'education', label: 'Education', icon: GraduationCap, badge: 'Key' },
-        { id: 'projects', label: 'Projects', icon: Code2, badge: 'Key' },
-        { id: 'skills', label: 'Skills', icon: Wrench },
-        { id: 'experience', label: 'Internships', icon: Briefcase },
-        { id: 'certifications', label: 'Certs', icon: Award },
-        { id: 'declaration', label: 'Declaration', icon: FileCheck },
+        { id: 'contact', label: t.contactTab, icon: User },
+        { id: 'summary', label: t.summaryTab, icon: FileText },
+        { id: 'education', label: t.educationTab, icon: GraduationCap, badge: 'Key' },
+        { id: 'projects', label: t.projectsTab, icon: Code2, badge: 'Key' },
+        { id: 'skills', label: t.skillsTab, icon: Wrench },
+        { id: 'experience', label: isFresher ? (lang === 'hi' ? 'इंटर्नशिप' : 'Internships') : t.experienceTab, icon: Briefcase },
+        { id: 'certifications', label: t.certificationsTab, icon: Award },
+        { id: 'declaration', label: t.declarationTab, icon: FileCheck },
       ]
     : [
-        { id: 'contact', label: 'Contact', icon: User },
-        { id: 'summary', label: 'Summary', icon: FileText },
-        { id: 'experience', label: 'Experience', icon: Briefcase },
-        { id: 'education', label: 'Education', icon: GraduationCap },
-        { id: 'projects', label: 'Projects', icon: Code2 },
-        { id: 'skills', label: 'Skills', icon: Wrench },
-        { id: 'certifications', label: 'Certs', icon: Award },
-        { id: 'declaration', label: 'Declaration', icon: FileCheck },
+        { id: 'contact', label: t.contactTab, icon: User },
+        { id: 'summary', label: t.summaryTab, icon: FileText },
+        { id: 'experience', label: t.experienceTab, icon: Briefcase },
+        { id: 'education', label: t.educationTab, icon: GraduationCap },
+        { id: 'projects', label: t.projectsTab, icon: Code2 },
+        { id: 'skills', label: t.skillsTab, icon: Wrench },
+        { id: 'certifications', label: t.certificationsTab, icon: Award },
+        { id: 'declaration', label: t.declarationTab, icon: FileCheck },
       ];
 
   return (
@@ -310,8 +340,51 @@ export function GuidedEditor({ initialResume, onSave }: GuidedEditorProps) {
           </button>
         </div>
 
-        {/* Right: Actions (Fresher Mode, Auto Adjust, Template, Tailor, PDF) */}
-        <div className="flex items-center gap-2">
+        {/* Right: Actions (Language, Import, Govt Form, Fresher Mode, Auto Adjust, Template, Tailor, PDF) */}
+        <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+          {/* Language Toggle (EN / हिन्दी) */}
+          <button
+            onClick={handleToggleLang}
+            className="inline-flex items-center gap-1 bg-gray-50 hover:bg-gray-100 text-[#090B10] border border-[#DDE2E8] px-2 py-1.5 rounded-lg text-xs font-bold transition-colors"
+            title="Switch Language / भाषा बदलें"
+          >
+            <Languages className="w-3.5 h-3.5 text-[#4B3DF5]" />
+            <span>{lang === 'en' ? 'हिन्दी' : 'English'}</span>
+          </button>
+
+          {/* Profile Import Button (Naukri / LinkedIn) */}
+          <button
+            onClick={() => setIsProfileImportOpen(true)}
+            className="hidden md:inline-flex items-center gap-1.5 bg-white hover:bg-gray-50 text-[#263D59] border border-[#DDE2E8] px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors"
+            title="Import from Naukri or LinkedIn without retyping"
+          >
+            <FileUp className="w-3.5 h-3.5 text-blue-600" />
+            <span>{t.importProfile}</span>
+          </button>
+
+          {/* Government Form Autofill Button */}
+          <button
+            onClick={() => setIsGovtFormModalOpen(true)}
+            className="hidden sm:inline-flex items-center gap-1.5 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors"
+            title="Copy structured fields formatted for SSC, IBPS, UPSC portals"
+          >
+            <Building2 className="w-3.5 h-3.5 text-amber-700" />
+            <span>{t.govtFormAutofill}</span>
+          </button>
+
+          {/* WhatsApp Share Button */}
+          <button
+            onClick={() => {
+              const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/r/${resume.id}` : '';
+              const text = encodeURIComponent(`Check out my verified ATS resume on ResumeCraft: ${shareUrl}`);
+              window.open(`https://wa.me/?text=${text}`, '_blank');
+            }}
+            className="p-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-lg transition-colors"
+            title={t.shareWhatsapp}
+          >
+            <Share2 className="w-4 h-4 text-[#25D366]" />
+          </button>
+
           {/* Fresher Mode Toggle */}
           <button
             onClick={() => setResume((prev) => ({ ...prev, fresher_mode: !prev.fresher_mode }))}
@@ -323,7 +396,7 @@ export function GuidedEditor({ initialResume, onSave }: GuidedEditorProps) {
             title="Toggle Fresher Mode: Prioritizes Education & Projects over Experience for campus drives."
           >
             <GraduationCap className={`w-3.5 h-3.5 ${resume.fresher_mode ? 'text-[#4B3DF5]' : 'text-[#263D59]'}`} />
-            <span className="hidden sm:inline">Fresher Mode</span>
+            <span className="hidden sm:inline">{t.fresherMode}</span>
             <span className={`text-[10px] px-1 py-0.2 rounded font-bold ${resume.fresher_mode ? 'bg-[#4B3DF5] text-white' : 'bg-gray-100 text-[#263D59]'}`}>
               {resume.fresher_mode ? 'ON' : 'OFF'}
             </span>
@@ -341,7 +414,7 @@ export function GuidedEditor({ initialResume, onSave }: GuidedEditorProps) {
             ) : (
               <Sliders className="w-3.5 h-3.5 text-[#263D59]" />
             )}
-            <span>{autoAdjusting ? 'Reflowing...' : '1-Page Fit'}</span>
+            <span>{autoAdjusting ? 'Reflowing...' : t.autoAdjust}</span>
           </button>
 
           {/* Template Dropdown with Indian Market Names */}
@@ -369,7 +442,7 @@ export function GuidedEditor({ initialResume, onSave }: GuidedEditorProps) {
             className="inline-flex items-center gap-1.5 bg-[#F0F3FF] hover:bg-[#E4E9FF] text-[#4B3DF5] border border-[#4B3DF5]/30 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
           >
             <Sparkles className="w-3.5 h-3.5 text-[#4B3DF5]" />
-            <span className="hidden sm:inline">Tailor for Job</span>
+            <span className="hidden sm:inline">{t.tailorForJob}</span>
           </button>
 
           {/* Download PDF Button */}
@@ -383,7 +456,7 @@ export function GuidedEditor({ initialResume, onSave }: GuidedEditorProps) {
             ) : (
               <Download className="w-3.5 h-3.5" />
             )}
-            <span>{downloading ? 'Compiling...' : 'Download PDF'}</span>
+            <span>{downloading ? t.compiling : t.downloadPdf}</span>
           </button>
 
           {onSave && (
@@ -447,7 +520,9 @@ export function GuidedEditor({ initialResume, onSave }: GuidedEditorProps) {
             <div className="p-2.5 border-b border-[#E1E5EA] bg-[#F8FAFC]">
               <ScoreGauge
                 scoreResult={calculateResumeScore(resume)}
+                resume={resume}
                 onFocusSection={(sec) => setActiveTab(sec as any)}
+                onOpenScoreBadge={() => setIsScoreBadgeOpen(true)}
               />
             </div>
 
@@ -606,6 +681,75 @@ export function GuidedEditor({ initialResume, onSave }: GuidedEditorProps) {
                         className="w-full h-10 px-3 border border-[#DDE2E8] rounded-lg text-xs outline-none focus:border-[#4B3DF5] focus:ring-1 focus:ring-[#4B3DF5] transition-colors"
                       />
                     </div>
+
+                    {/* Optional Government / PSU Recruitment Fields (Private & Optional) */}
+                    <div className="sm:col-span-2 pt-3 border-t border-[#E1E5EA] space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1.5">
+                          <Building2 className="w-3.5 h-3.5 text-amber-600" />
+                          <label className="block text-xs font-bold text-[#090B10]">
+                            Government & PSU Form Details <span className="text-gray-400 font-normal">(Optional & Private)</span>
+                          </label>
+                        </div>
+                        <span className="text-[10px] text-gray-400">
+                          Used only for "Govt Form Copy" — not shown on standard PDF
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-amber-50/40 p-3 rounded-lg border border-amber-200/60">
+                        <div>
+                          <label className="block text-[11px] font-semibold text-gray-700 mb-1">Date of Birth (DOB)</label>
+                          <input
+                            type="date"
+                            value={resume.contact.dob || ''}
+                            onChange={(e) => setResume({ ...resume, contact: { ...resume.contact, dob: e.target.value } })}
+                            className="w-full h-8 px-2 bg-white border border-gray-200 rounded text-xs outline-none focus:border-amber-600"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-[11px] font-semibold text-gray-700 mb-1">Social Category / Reservation</label>
+                          <select
+                            value={resume.contact.category_reservation || ''}
+                            onChange={(e) => setResume({ ...resume, contact: { ...resume.contact, category_reservation: e.target.value as any } })}
+                            className="w-full h-8 px-2 bg-white border border-gray-200 rounded text-xs outline-none focus:border-amber-600 cursor-pointer"
+                          >
+                            <option value="">-- Select Category (Optional) --</option>
+                            <option value="General">General (Unreserved)</option>
+                            <option value="OBC-NCL">OBC-NCL (Non-Creamy Layer)</option>
+                            <option value="SC">Scheduled Caste (SC)</option>
+                            <option value="ST">Scheduled Tribe (ST)</option>
+                            <option value="EWS">Economically Weaker Section (EWS)</option>
+                            <option value="PwD">Person with Benchmark Disability (PwD)</option>
+                          </select>
+                        </div>
+
+                        <div>
+                          <label className="block text-[11px] font-semibold text-gray-700 mb-1">Father's / Guardian's Full Name</label>
+                          <input
+                            type="text"
+                            value={resume.contact.father_name || ''}
+                            onChange={(e) => setResume({ ...resume, contact: { ...resume.contact, father_name: e.target.value } })}
+                            placeholder="e.g. Ramesh Chandra Sharma"
+                            className="w-full h-8 px-2 bg-white border border-gray-200 rounded text-xs outline-none focus:border-amber-600"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-[11px] font-semibold text-gray-700 mb-1">Gender</label>
+                          <select
+                            value={resume.contact.gender || ''}
+                            onChange={(e) => setResume({ ...resume, contact: { ...resume.contact, gender: e.target.value as any } })}
+                            className="w-full h-8 px-2 bg-white border border-gray-200 rounded text-xs outline-none focus:border-amber-600 cursor-pointer"
+                          >
+                            <option value="">-- Select Gender --</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
@@ -654,6 +798,15 @@ export function GuidedEditor({ initialResume, onSave }: GuidedEditorProps) {
                     <span className="text-[11px] font-semibold text-[#263D59]">Quick Add for Indian Resumes:</span>
                     <button
                       type="button"
+                      onClick={() => setIsDigiLockerOpen(true)}
+                      className="text-[11px] font-bold bg-[#002D62] hover:bg-[#002047] text-white border border-[#002D62] px-2.5 py-1 rounded transition-colors flex items-center gap-1.5 shadow-2xs"
+                      title="Import government-verified degree or marksheet from DigiLocker"
+                    >
+                      <ShieldCheck className="w-3.5 h-3.5 text-[#FF9933]" />
+                      <span>{t.verifyWithDigilocker}</span>
+                    </button>
+                    <button
+                      type="button"
                       onClick={() => handleAddPresetEducation('degree')}
                       className="text-[11px] font-medium bg-white hover:bg-[#F0F3FF] hover:text-[#4B3DF5] border border-[#DDE2E8] px-2.5 py-1 rounded transition-colors"
                     >
@@ -678,9 +831,20 @@ export function GuidedEditor({ initialResume, onSave }: GuidedEditorProps) {
                   {resume.education.map((edu, eduIdx) => (
                     <div key={edu.id} className="p-4 border border-[#E1E5EA] rounded-lg bg-[#FFFFFF] shadow-2xs space-y-3">
                       <div className="flex justify-between items-start gap-2">
-                        <span className="text-[11px] font-bold text-[#4B3DF5] uppercase tracking-wider">
-                          Entry #{eduIdx + 1}: {edu.degree || 'Degree'}
-                        </span>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-[11px] font-bold text-[#4B3DF5] uppercase tracking-wider">
+                            Entry #{eduIdx + 1}: {edu.degree || 'Degree'}
+                          </span>
+                          {edu.digilocker_verified && (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                              <ShieldCheck className="w-3 h-3 text-emerald-600" />
+                              <span>DigiLocker Verified</span>
+                              {edu.digilocker_doc_id && (
+                                <span className="font-mono text-[9px] text-gray-400">({edu.digilocker_doc_id})</span>
+                              )}
+                            </span>
+                          )}
+                        </div>
                         <button
                           onClick={() => {
                             const updated = resume.education.filter((_, i) => i !== eduIdx);
@@ -1489,6 +1653,53 @@ export function GuidedEditor({ initialResume, onSave }: GuidedEditorProps) {
             setResume(updated);
           }
         }}
+      />
+
+      {/* DIGILOCKER VERIFICATION MODAL */}
+      <DigiLockerModal
+        isOpen={isDigiLockerOpen}
+        onClose={() => setIsDigiLockerOpen(false)}
+        onVerifyAndAdd={(item) => {
+          setResume((prev) => ({
+            ...prev,
+            education: [item, ...prev.education],
+          }));
+          setActiveTab('education');
+        }}
+      />
+
+      {/* GOVERNMENT FORM AUTOFILL MODAL */}
+      <GovtFormAutofillModal
+        isOpen={isGovtFormModalOpen}
+        onClose={() => setIsGovtFormModalOpen(false)}
+        resume={resume}
+      />
+
+      {/* PROFILE IMPORT MODAL (Naukri & LinkedIn) */}
+      <ProfileImportModal
+        isOpen={isProfileImportOpen}
+        onClose={() => setIsProfileImportOpen(false)}
+        onImportSuccess={(imported) => {
+          setResume((prev) => ({
+            ...prev,
+            ...imported,
+            contact: {
+              ...prev.contact,
+              ...(imported.contact || {}),
+            },
+            experience: imported.experience && imported.experience.length > 0 ? imported.experience : prev.experience,
+            education: imported.education && imported.education.length > 0 ? imported.education : prev.education,
+            skills: imported.skills && imported.skills.length > 0 ? imported.skills : prev.skills,
+          }));
+        }}
+      />
+
+      {/* SCORE BADGE MODAL */}
+      <ScoreBadgeModal
+        isOpen={isScoreBadgeOpen}
+        onClose={() => setIsScoreBadgeOpen(false)}
+        resume={resume}
+        scoreResult={calculateResumeScore(resume)}
       />
 
     </div>

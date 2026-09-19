@@ -52,3 +52,9 @@ test_export*
 
 .vercel
 .env*
+brag-output/raw_clips/
+brag-output/*cut.mp4
+brag-output/*.mp3
+brag-output/*.pdf
+brag-output/video_visuals_only.mp4
+*.py

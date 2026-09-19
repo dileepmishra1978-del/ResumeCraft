@@ -1,1 +1,10 @@
-﻿Your resume wasn't getting rejected by recruiters. It was getting vaporized by a regex from 2004. We raised a fake Series A to fix it with ResumeCraft.
+﻿Your resume wasn't getting rejected by recruiters — it was getting scrambled by legacy ATS parsers and broken canvas tables.
+
+Meet ResumeCraft:
+• Powered by RenderCV vector typography (selectable text, zero rasterization)
+• Instant AI XYZ-formula bullet rewriting with live scoring
+• Dynamic 1-Page Fit auto-reflow
+• Clean sb2nov & engineering-grade templates
+• 100% free & open-source
+
+Build a resume that actually gets read: Search ResumeCraft.

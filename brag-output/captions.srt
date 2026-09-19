@@ -1,0 +1,47 @@
+﻿1
+00:00:00,000 --> 00:00:04,200
+Somewhere right now, a great resume is getting auto-rejected.
+
+2
+00:00:04,200 --> 00:00:08,500
+Not by a person. By a script.
+
+3
+00:00:08,500 --> 00:00:12,400
+Vague bullet points. Missing keywords.
+
+4
+00:00:12,400 --> 00:00:16,500
+A template that breaks the second it hits a parser.
+
+5
+00:00:16,500 --> 00:00:21,800
+This is ResumeCraft. Built on the same vector typography engine
+
+6
+00:00:21,800 --> 00:00:27,500
+that passes Workday, Taleo, and Naukri parsers — not a screenshot pretending to.
+
+7
+00:00:27,500 --> 00:00:32,000
+Paste a bullet. Watch it rewrite itself using Google's own XYZ formula.
+
+8
+00:00:32,000 --> 00:00:37,500
+Fix your page count in one click.
+
+9
+00:00:37,500 --> 00:00:43,500
+Switch templates without losing a single word.
+
+10
+00:00:43,500 --> 00:00:48,800
+A real, selectable, ATS-safe PDF. Not a picture of a resume.
+
+11
+00:00:48,800 --> 00:00:54,000
+An actual document a parser can read.
+
+12
+00:00:54,000 --> 00:01:00,000
+ResumeCraft. Build a resume that actually gets read.

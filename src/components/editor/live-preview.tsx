@@ -223,7 +223,14 @@ export function LivePreview({ resume, canvasOnly = false }: LivePreviewProps) {
           {resume.education.map((edu) => (
             <div key={edu.id} className="text-xs">
               <div className="flex justify-between items-baseline font-bold text-gray-900">
-                <span className="text-sm font-semibold">{edu.institution}</span>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-sm font-semibold">{edu.institution}</span>
+                  {edu.digilocker_verified && (
+                    <span className="inline-flex items-center gap-0.5 text-[9.5px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-300/80 px-1.5 py-0.2 rounded">
+                      ✓ DigiLocker Verified
+                    </span>
+                  )}
+                </div>
                 <span className={themeConfig.dateColor}>{edu.start_date} – {edu.end_date}</span>
               </div>
               <div className="flex justify-between items-baseline text-gray-700 mt-0.5">
