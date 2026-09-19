@@ -378,13 +378,10 @@ function LoginFormContent() {
       <div className="w-full lg:w-[46%] h-auto lg:h-full bg-[#0B0F19] flex flex-col justify-center px-6 sm:px-12 xl:px-16 py-8 lg:py-10 border-b lg:border-b-0 lg:border-r border-[#1E293B] overflow-y-auto">
         <div className="max-w-[360px] w-full mx-auto my-auto">
           {/* Logo row */}
-          <div className="flex items-center gap-2.5 mb-6 sm:mb-8">
-            <div className="w-[32px] h-[32px] rounded-lg bg-[#4B3DF5] text-white flex items-center justify-center font-extrabold text-sm shadow-xs select-none">
-              RC
-            </div>
-            <span className="font-extrabold text-[18px] text-[#F8FAFC] tracking-tight">
+          <div className="flex items-center mb-6 sm:mb-8">
+            <Link href="/" className="font-extrabold text-[20px] text-[#F8FAFC] tracking-tight hover:opacity-90 transition-opacity">
               Resume<span className="text-[#4B3DF5]">Craft</span>
-            </span>
+            </Link>
           </div>
 
           {/* Segmented Mode Switcher */}

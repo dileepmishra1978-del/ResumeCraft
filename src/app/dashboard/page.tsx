@@ -110,10 +110,7 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* NAV */}
       <nav className="h-[58px] bg-white border-b border-[#E1E5EA] px-4 sm:px-8 flex items-center justify-between sticky top-0 z-20">
-        <Link href="/" className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-[#4B3DF5] text-white flex items-center justify-center font-extrabold text-sm shadow-xs">
-            RC
-          </div>
+        <Link href="/" className="flex items-center">
           <span className="font-bold text-[#090B10] tracking-tight text-lg">
             Resume<span className="text-[#4B3DF5]">Craft</span>
           </span>

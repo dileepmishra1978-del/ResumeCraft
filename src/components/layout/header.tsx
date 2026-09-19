@@ -55,10 +55,7 @@ export function Header() {
       <div className="max-w-7xl mx-auto h-full px-4 sm:px-8 flex items-center justify-between">
         {/* LEFT: LOGO & PRIMARY NAV */}
         <div className="flex items-center gap-8 h-full">
-          <Link href="/" className="flex items-center gap-2.5 shrink-0">
-            <div className="w-8 h-8 rounded-lg bg-[#4B3DF5] text-white flex items-center justify-center font-extrabold text-sm shadow-xs">
-              RC
-            </div>
+          <Link href="/" className="flex items-center shrink-0">
             <span className="font-bold text-[#090B10] tracking-tight text-lg sm:text-xl">
               Resume<span className="text-[#4B3DF5]">Craft</span>
             </span>
