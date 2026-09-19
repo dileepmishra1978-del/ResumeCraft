@@ -138,12 +138,6 @@ export function Header() {
               Templates
             </Link>
 
-            <a
-              href="/#pricing"
-              className="px-2 py-1 hover:text-[#090B10] transition-colors"
-            >
-              Pricing
-            </a>
 
             <a
               href="#features"
@@ -391,13 +385,7 @@ export function Header() {
             >
               Templates
             </Link>
-            <a
-              href="/#pricing"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="block px-3 py-2.5 rounded-lg text-sm font-semibold text-[#090B10] hover:bg-gray-100"
-            >
-              Pricing
-            </a>
+
             <a
               href="#features"
               onClick={() => setIsMobileMenuOpen(false)}
