@@ -29,7 +29,8 @@ import {
   FileCheck,
   Eye,
   PenTool,
-  CheckCircle2
+  CheckCircle2,
+  Printer
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -132,22 +133,25 @@ export function GuidedEditor({ initialResume, onSave }: GuidedEditorProps) {
         }),
       });
 
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || 'Failed to generate PDF');
+      if (res.ok) {
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${(resume.contact.name || 'Resume').replace(/\s+/g, '_')}_ATS.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        return;
       }
 
-      const blob = await res.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${(resume.contact.name || 'Resume').replace(/\s+/g, '_')}_ATS.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
+      // Backend compiler returned non-200 (e.g. running on serverless Vercel without microservice)
+      console.warn("Backend compiler returned non-200. Using high-fidelity browser PDF print.");
+      window.print();
     } catch (err: any) {
-      alert(err.message || 'Error exporting PDF');
+      console.warn("Export API error, using browser print fallback:", err);
+      window.print();
     } finally {
       setDownloading(false);
     }
@@ -387,6 +391,16 @@ export function GuidedEditor({ initialResume, onSave }: GuidedEditorProps) {
           >
             <Sparkles className="w-3.5 h-3.5 text-[#4B3DF5]" />
             <span className="hidden sm:inline">Tailor for Job</span>
+          </button>
+
+          {/* Print / Save PDF Button */}
+          <button
+            onClick={() => window.print()}
+            title="Instant Print or Save as PDF via browser"
+            className="inline-flex items-center gap-1.5 bg-white hover:bg-gray-50 text-[#263D59] border border-[#DDE2E8] px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
+          >
+            <Printer className="w-3.5 h-3.5 text-[#263D59]" />
+            <span className="hidden md:inline">Print / Save PDF</span>
           </button>
 
           {/* Download PDF Button */}

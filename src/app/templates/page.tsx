@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -115,8 +115,8 @@ function TemplatesPageContent() {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
     } catch (err) {
-      console.error('Download error:', err);
-      alert('Could not download sample PDF. Please ensure the backend render service is active.');
+      console.warn('Backend compiler unavailable, redirecting to editor:', err);
+      window.location.href = `/dashboard?template=${item.baseTheme}&preset=${item.id}`;
     } finally {
       setDownloadingId(null);
     }
